@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load allauth account %}
+{% block title %}
+    {% trans "Sign In" %}
+{% endblock title %}
+{% block content %}
+<div class="container py-4 ">
+    <div class="row">
+        <div class="col-12 col-lg-6 mx-auto">
+            {% element h2 %}
+                {% trans "Sign In" %}
+            {% endelement %}
+            <p>
+                {% blocktrans %}If you have not created an account yet, then please
+            <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}
+            </p>
+            {% url 'account_login' as login_url %}
+            {% for field, errors in form.errors.items %} 
+                {% for error in errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+                {% endfor %}
+            {% endfor %}
+            <form action="{% url 'account_login' %}" method="post">
+                {% csrf_token %}
+                <!-- Input -->
+                <div class="mb-3">
+                    <label class="form-label" for="id_login">Email</label>
+                    <input type="text" id="username" name="login" class="form-control" placeholder="Email address" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="id_password">Password</label>
+                    <input type="password" id="username" name="password" class="form-control" placeholder="Password" required>
+                    <span class="helptext" id="id_password_helptext"><a href="{% url 'account_reset_password' %}">Forgot your password?</a></span>
+                </div>
+                <button class="btn btn-primary" type="submit">Sign In</button>
+            </form>
+            {% if SOCIALACCOUNT_ENABLED %}
+                {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
